@@ -1,0 +1,73 @@
+#!/bin/bash
+
+PGHOME=$HOME/local/pgsql/latest
+PG_SRC=`pwd`
+
+LLVM_BUILD="n"
+if [ "$1" = "--llvm" ]; then
+shift
+LLVM_BUILD="y"
+fi
+
+#(0) clean
+if [ "$1" = "-a" ]; then
+test -f $PGHOME/data/postmaster.pid && pg_ctl stop
+test -f Makefile && make clean
+rm -rf $PGHOME/../latest/*
+rm -f  $HOME/bin/pg_start_new 
+rm -f  pg_macro pg_start_new
+
+echo export PATH=$PGHOME/bin:\$PATH > pg_macro
+echo export PGHOME=$PGHOME         >> pg_macro
+echo export PGPORT=5460            >> pg_macro
+echo export PGDATA=$PGHOME/data    >> pg_macro
+
+# For postgis extension
+echo export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/opt/alternative/geos-3.5/lib:/opt/alternative/proj4-4.8/lib:/opt/alternative/gdal-2.0/lib >> pg_macro
+
+fi
+
+export PGPORT=5460
+export PGHOME=$PGHOME 
+export PGDATA=$PGHOME/data
+
+if [ "${LLVM_BUILD}" = "y" ]; then
+export PATH=/opt/alternative/llvm-3.8.0/bin:$PATH
+export CC=clang
+fi
+
+#(1) configure
+./configure --prefix=$PGHOME \
+            --with-pgport=5460 --enable-thread-safety
+
+if [ "$1" = "-c" ]; then
+echo ""
+echo "Configure option:"
+echo "    --with-pgport=5460"
+echo "    --enable-thread-safety"
+echo ""
+exit 0
+fi
+
+m4 -DPGHOME=$PGHOME pg_start.sh > pg_start_new
+test -x pg_start_new || chmod a+x pg_start_new
+
+#(2) install
+make
+make install
+if [ "$1" = "-a" ]; then
+
+if [ -d $HOME/bin ]; then
+cp -f pg_start_new $HOME/bin
+fi
+
+cd $PGHOME
+bin/initdb
+bin/postgres > /tmp/pg.log 2>&1 &
+sleep 5
+
+cd $PG_SRC 
+$PG_SRC/doc/sample_database/pagila/install_db
+$PG_SRC/doc/sample_database/universal_schema/install_db
+
+fi

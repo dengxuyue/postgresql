@@ -12,6 +12,8 @@
 *.exp
 *.a
 *.mo
+*.swp
+*.rej
 *.pot
 objfiles.txt
 .deps/
@@ -28,11 +30,20 @@ win32ver.rc
 lib*dll.def
 lib*.pc
 
+tags
+svn.*
+git.*
+*.orig
+*.diff
+*.patch
+
 # Local excludes in root directory
 /GNUmakefile
 /config.cache
 /config.log
 /config.status
+/pg_macro
+/pg_start_new
 /pgsql.sln
 /pgsql.sln.cache
 /Debug/
