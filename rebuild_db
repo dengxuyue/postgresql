@@ -1,0 +1,10 @@
+PG_SRC=`pwd`
+source $PG_SRC/pg_macro
+
+test -f $PGHOME/data/postmaster.pid || (cd $PGHOME; ./bin/postgres -i > /tmp/pg.log 2>&1 &)
+
+cd $PG_SRC/
+$PG_SRC/doc/sample_database/pagila/install_db
+$PG_SRC/doc/sample_database/universal_schema/install_db
+
+echo "Install databases pagila and universal_schema"

@@ -1,4 +1,4 @@
-!*.pot
+!*.xml.pot
 
 /GNUmakefile
 /config.log

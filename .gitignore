@@ -7,6 +7,7 @@
 *.sl
 *.sl.[0-9]
 *.sl.[0-9].[0-9]
+*.swp
 *.dylib
 *.dll
 *.a
@@ -27,11 +28,21 @@ win32ver.rc
 lib*dll.def
 lib*.pc
 
+/src/tags
+/src/TAGS
+/src/tutorial/advanced.sql
+/src/tutorial/basics.sql
+/src/tutorial/complex.sql
+/src/tutorial/funcs.sql
+/src/tutorial/syscat.sql
+
 # Local excludes in root directory
 /GNUmakefile
 /config.cache
 /config.log
 /config.status
+/pg_macro
+/pg_start_r9
 /pgsql.sln
 /pgsql.sln.cache
 /Debug/
