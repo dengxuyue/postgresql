@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cd src
+
+if [ -f tags ]; then 
+rm -f tags
+fi
+
+ctags -R *
+
+if [ -f TAGS ]; then
+rm -f TAGS
+fi
+
+find . -type f -iname "*.[chS]" | xargs etags -a
