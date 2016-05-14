@@ -1,0 +1,9 @@
+--Referenced Tables: BRAND, BRAND_OWNER_ORG 
+--Referenced Views: dr142340
+--Source: DR142340
+--Query text:
+
+select 1 
+from UNIVERSAL_SCHEMA.dr142340 a LEFT OUTER JOIN UNIVERSAL_SCHEMA.dr142340 a3 ON 30000 = a3.LEVEL_ID
+WHERE a.LEVEL_ID = 0;
+

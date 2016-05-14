@@ -1,0 +1,75 @@
+#!/bin/bash
+
+PG_SRC=`pwd`
+
+source $PG_SRC/pg_macro
+
+#(1) install
+$PGHOME/bin/createdb universal_schema
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/ddl/createzoneall/createzoneall.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/brand_owner_org/brand_owner_org.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/brand/brand.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/demographics/demographics.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/associate/associate.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/associate_position/associate_position.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/associate_expense_type/associate_expense_type.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/associate_benefit_expense/associate_benefit_expense.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/associate_labor_expense/associate_labor_expense.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/item/item.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/item_division/item_division.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/item_inventory/item_inventory.1.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/item_inventory/item_inventory.2.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/item_inventory/item_inventory.3.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/item_inventory_plan/item_inventory_plan.1.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/item_inventory_plan/item_inventory_plan.2.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/item_trait/item_trait.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/all_divisions/all_divisions.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/all_item_divisions/all_item_divisions.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/channel/channel.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/cost/cost.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/cost_type/cost_type.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/current_promo/current_promo.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/district/district.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/division/division.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/job_classification/job_classification.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/labor_plan/labor_plan.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/location/location.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/location_plan/location_plan.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/location_type/location_type.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/party/party.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/position_grade/position_grade.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/position_type/position_type.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/price_change_reason/price_change_reason.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/promo_type/promo_type.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/region/region.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/return_reason/return_reason.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/return_transaction_line/return_transaction_line.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/sales_transaction/sales_transaction.1.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/sales_transaction/sales_transaction.2.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/sales_transaction/sales_transaction.3.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/sales_transaction_line/sales_transaction_line.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/trait/trait.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/trait_group/trait_group.sql
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/trait_value/trait_value.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/data/work_shift/work_shift.sql
+
+$PGHOME/bin/psql -d universal_schema -f $PG_SRC/doc/sample_database/universal_schema/ddl/alterzoneall/alterzoneall.sql
+
+echo "The server postgres is running now!"
+echo "And already created universal_schema database."
+echo "You can operation on universal_schema: psql -d universal_schema" 
+

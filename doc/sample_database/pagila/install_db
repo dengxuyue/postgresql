@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PG_SRC=`pwd`
+
+source $PG_SRC/pg_macro
+
+$PGHOME/bin/createdb pagila
+$PGHOME/bin/psql -d pagila -f $PG_SRC/doc/sample_database/pagila/pagila-schema.sql
+$PGHOME/bin/psql -d pagila -f $PG_SRC/doc/sample_database/pagila/pagila-data.sql
+
+echo "The server postgres is running now!"
+echo "And already created pagila database."
+echo "You can operation on pagila: psql -d pagila" 

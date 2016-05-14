@@ -1,0 +1,70 @@
+SELECT	1 AS "xidx", '#records ' AS "xtable", "ASSOCIATE", "ASSOCIATE_LABOR_EXPENSE",
+		"brand", "PARTY" 
+FROM	(
+SELECT	CAST(COUNT(*) AS FLOAT) AS "ASSOCIATE" 
+FROM	"universal_schema"."ASSOCIATE") T1	, (
+SELECT	CAST(COUNT(*) AS FLOAT) AS "ASSOCIATE_LABOR_EXPENSE" 
+FROM	"universal_schema"."ASSOCIATE_LABOR_EXPENSE") T2	, (
+SELECT	CAST(COUNT(*) AS FLOAT) AS "brand" 
+FROM	"universal_schema"."brand") T3	, (
+SELECT	CAST(COUNT(*) AS FLOAT) AS "PARTY" 
+FROM	"universal_schema"."PARTY") T4
+UNION	
+SELECT	2, '#uniques ', "ASSOCIATE", "ASSOCIATE_LABOR_EXPENSE",
+		"brand", "PARTY" 
+FROM	(
+SELECT	CAST(COUNT(DISTINCT "Location_Id") AS FLOAT) AS "ASSOCIATE" 
+FROM	"universal_schema"."ASSOCIATE") T1	, (
+SELECT	CAST(COUNT(DISTINCT "Associate_Party_Id") AS FLOAT) AS "ASSOCIATE_LABOR_EXPENSE" 
+FROM	"universal_schema"."ASSOCIATE_LABOR_EXPENSE") T2	, (
+SELECT	CAST(COUNT(DISTINCT "Brand_Party_Id") AS FLOAT) AS "brand" 
+FROM	"universal_schema"."brand") T3	, (
+SELECT	CAST(COUNT(DISTINCT "Party_Id") AS FLOAT) AS "PARTY" 
+FROM	"universal_schema"."PARTY") T4
+UNION	
+SELECT	3, 'ASSOCIATE ', NULL, "ASSOCIATE_LABOR_EXPENSE", "brand",
+		"PARTY" 
+FROM	(
+SELECT	CAST(COUNT(DISTINCT c1) AS FLOAT) AS "ASSOCIATE_LABOR_EXPENSE" 
+FROM	(
+SELECT	DISTINCT "Location_Id" AS c1 
+FROM	"universal_schema"."ASSOCIATE") A, (
+SELECT	DISTINCT "Associate_Party_Id" AS c2 
+FROM	"universal_schema"."ASSOCIATE_LABOR_EXPENSE") B	WHERE c1 = c2) T2	,(
+SELECT	CAST(COUNT(DISTINCT c1) AS FLOAT) AS "brand" 
+FROM	(
+SELECT	DISTINCT "Location_Id" AS c1 
+FROM	"universal_schema"."ASSOCIATE") A, (
+SELECT	DISTINCT "Brand_Party_Id" AS c2 
+FROM	"universal_schema"."brand") B	WHERE c1 = c2) T3	,(
+SELECT	CAST(COUNT(DISTINCT c1) AS FLOAT) AS "PARTY" 
+FROM	(
+SELECT	DISTINCT "Location_Id" AS c1 
+FROM	"universal_schema"."ASSOCIATE") A, (
+SELECT	DISTINCT "Party_Id" AS c2 
+FROM	"universal_schema"."PARTY") B	WHERE c1 = c2) T4
+UNION	
+SELECT	4, 'ASSOCIATE_LABOR_EXPENSE', NULL, NULL, "brand", "PARTY" 
+FROM	(
+SELECT	CAST(COUNT(DISTINCT c1) AS FLOAT) AS "brand" 
+FROM	(
+SELECT	DISTINCT "Associate_Party_Id" AS c1 
+FROM	"universal_schema"."ASSOCIATE_LABOR_EXPENSE") A, (
+SELECT	DISTINCT "Brand_Party_Id" AS c2 
+FROM	"universal_schema"."brand") B	WHERE c1 = c2) T3	,(
+SELECT	CAST(COUNT(DISTINCT c1) AS FLOAT) AS "PARTY" 
+FROM	(
+SELECT	DISTINCT "Associate_Party_Id" AS c1 
+FROM	"universal_schema"."ASSOCIATE_LABOR_EXPENSE") A, (
+SELECT	DISTINCT "Party_Id" AS c2 
+FROM	"universal_schema"."PARTY") B	WHERE c1 = c2) T4
+UNION	
+SELECT	5, 'brand ', NULL, NULL, NULL, "PARTY" 
+FROM	(
+SELECT	CAST(COUNT(DISTINCT c1) AS FLOAT) AS "PARTY" 
+FROM	(
+SELECT	DISTINCT "Brand_Party_Id" AS c1 
+FROM	"universal_schema"."brand") A, (
+SELECT	DISTINCT "Party_Id" AS c2 
+FROM	"universal_schema"."PARTY") B	WHERE c1 = c2) T4
+ORDER	BY 1

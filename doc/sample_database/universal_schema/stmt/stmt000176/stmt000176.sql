@@ -1,0 +1,44 @@
+SELECT	CAST(COUNT(*) AS FLOAT) AS "_twm_cnt"	,CAST(SUM( 
+CASE	WHEN "Location" IS NULL THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_null1"	,CAST(SUM( 
+CASE	WHEN "Location" = 0 THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_zero1"	,CAST(SUM( 
+CASE	WHEN "Location" > 0 THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_pos1"	,CAST(SUM( 
+CASE	WHEN "Location" < 0 THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_neg1"	,CAST(SUM( 
+CASE	WHEN "SALES_TRAN_ID" IS NULL THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_null2"	,CAST(SUM( 
+CASE	WHEN "SALES_TRAN_ID" = 0 THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_zero2"	,CAST(SUM( 
+CASE	WHEN "SALES_TRAN_ID" > 0 THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_pos2"	,CAST(SUM( 
+CASE	WHEN "SALES_TRAN_ID" < 0 THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_neg2"	,CAST(SUM( 
+CASE	WHEN "Item_Qty" IS NULL THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_null3"	,CAST(SUM( 
+CASE	WHEN "Item_Qty" = 0 THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_zero3"	,CAST(SUM( 
+CASE	WHEN "Item_Qty" > 0 THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_pos3"	,CAST(SUM( 
+CASE	WHEN "Item_Qty" < 0 THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_neg3"	,CAST(SUM( 
+CASE	WHEN "Item_Id" IS NULL THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_null4"	,CAST(SUM( 
+CASE	WHEN "Item_Id" = ' ' THEN 1.0E0 
+ELSE	0.0E0 
+END	) AS FLOAT) AS "_twm_blank4"
+FROM	"universal_schema"."sales_transaction_line"
