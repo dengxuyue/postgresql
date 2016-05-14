@@ -1,0 +1,27 @@
+#!/bin/bash
+
+PGHOME=$HOME/local/pgsql/9.5
+TOPDIR=$(cd ..; pwd)
+
+if [ -f "$TOPDIR/pg_macro" ]; then
+source $TOPDIR/pg_macro
+fi
+
+cd postgis
+
+#(1) configure
+
+./configure --prefix=$PGHOME \
+            --with-projdir=/opt/alternative/proj4-4.8 \
+            --with-geosconfig=/opt/alternative/geos-3.5/bin/geos-config \
+            --with-gdalconfig=/opt/alternative/gdal-2.0/bin/gdal-config
+
+if [ ! -z $1 ] && [ $1 = "-c" ]; then
+echo "Configuration is done!"
+exit 1
+fi
+
+#(2) install
+
+make
+make install
