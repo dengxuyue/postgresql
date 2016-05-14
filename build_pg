@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PGHOME=$HOME/local/pgsql94/latest
+PGHOME=$HOME/local/pgsql/9.4
 PG_SRC=`pwd`
 
 #(0) clean
@@ -13,26 +13,26 @@ rm -f  pg_macro pg_start_r9
 
 echo export PATH=$PGHOME/bin:\$PATH > pg_macro
 echo export PGHOME=$PGHOME         >> pg_macro
-echo export PGPORT=5455            >> pg_macro
+echo export PGPORT=5454            >> pg_macro
 echo export PGDATA=$PGHOME/data    >> pg_macro
 
 fi
 
 export PGHOME=$PGHOME
-export PGPORT=5455
+export PGPORT=5454
 export PGDATA=$PGHOME/data
 
 #(1) configure
 ./configure --prefix=$PGHOME \
             --with-perl --with-python \
-            --with-pgport=5455 --enable-thread-safety
+            --with-pgport=5454 --enable-thread-safety
 
 if [ ! -z $1 ] && [ "$1" = "-c" ]; then
 echo ""
 echo "Configure option:"
 echo "    --with-perl "
 echo "    --with-python"
-echo "    --with-pgport=5455"
+echo "    --with-pgport=5454"
 echo "    --enable-thread-safety"
 echo ""
 exit 0
