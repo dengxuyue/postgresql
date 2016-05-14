@@ -1,0 +1,43 @@
+SELECT 
+    I.ITEM_NAME, 
+    COUNT(N2.SALES_TRAN_ID), 
+    CAST(AVG(N2.SUM_QTY) AS DEC(5, 4)) PROD_QTY, 
+    AVG(N2.MKB_ITEM_QTY) BSKT_QTY, 
+    AVG(N2.SUM_QTY) / AVG(N2.MKB_ITEM_QTY) * 100 AS PERCENT_BASKET_COUNT, 
+    AVG(N2.REV_AMT) PROD_REV, 
+    AVG(N2.MKB_REV_AMT) BSKT_REV, 
+    AVG(N2.REV_AMT) / AVG(N2.MKB_REV_AMT) * 100 AS PERCENT_BASKET_REV 
+FROM 
+( 
+    SELECT 
+        N1.SALES_TRAN_ID, 
+        N1.ITEM_ID, 
+        CAST(N1.SUM_QTY AS DEC(5,4)), 
+        N1.REV_AMT, 
+        ST.MKB_ITEM_QTY, 
+        ST.MKB_REV_AMT 
+    FROM 
+    ( 
+        SELECT 
+            SALES_TRAN_ID, 
+            ITEM_ID,
+            TRAN_LINE_DATE, 
+            SUM(ITEM_QTY) SUM_QTY, 
+            SUM(UNIT_SELLING_PRICE_AMT) REV_AMT 
+        FROM universal_schema.SALES_TRANSACTION_LINE 
+        WHERE ITEM_ID IN 
+            ( 
+                SELECT ITEM_ID 
+                FROM universal_schema.ITEM 
+                WHERE ITEM_NAME LIKE 'Good'
+            ) 
+        AND TRAN_LINE_DATE > '2005-05-31' GROUP BY 1,2,3 
+    ) N1(SALES_TRAN_ID, ITEM_ID,TRAN_LINE_DATE,SUM_QTY, REV_AMT), 
+    universal_schema.SALES_TRANSACTION ST 
+    WHERE N1.SALES_TRAN_ID = ST.SALES_TRAN_ID 
+        AND N1.TRAN_LINE_DATE = ST.TRAN_DATE 
+) N2(SALES_TRAN_ID, ITEM_ID, SUM_QTY,REV_AMT,MKB_ITEM_QTY, MKB_REV_AMT), 
+universal_schema.ITEM I 
+WHERE 
+    N2.ITEM_ID=I.ITEM_ID 
+GROUP BY 1

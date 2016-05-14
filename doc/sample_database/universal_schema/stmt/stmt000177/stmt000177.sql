@@ -1,0 +1,11 @@
+SELECT	CAST(COUNT("Location") AS FLOAT) AS "_twm_cnt1"	,MIN(CAST("Location" AS FLOAT)) AS "_twm_min1"	,MAX(CAST("Location" AS FLOAT)) AS "_twm_max1"	,AVG(CAST("Location" AS FLOAT)) AS "_twm_mean1"	,STDDEV_SAMP(CAST("Location" AS FLOAT)) AS "_twm_std1"	,SKEW(CAST("Location" AS FLOAT)) AS "_twm_skew1"	,
+CASE	WHEN AVG(CAST("Location" AS FLOAT)) = 0 THEN NULL 
+ELSE	100* STDDEV_SAMP(CAST("Location" AS FLOAT)) / AVG(CAST("Location" AS FLOAT)) 
+END	AS "_twm_cv1"	,STDDEV_SAMP(CAST("Location" AS FLOAT))**2 AS "_twm_var1"	,SUM(CAST("Location" AS FLOAT)) AS "_twm_sum1"	,SUM(CAST("Location" AS FLOAT)**2) - CAST(COUNT("Location") AS FLOAT)*AVG(CAST("Location" AS FLOAT))**2 AS "_twm_css1"	,CAST(COUNT("SALES_TRAN_ID") AS FLOAT) AS "_twm_cnt2"	,MIN(CAST("SALES_TRAN_ID" AS FLOAT)) AS "_twm_min2"	,MAX(CAST("SALES_TRAN_ID" AS FLOAT)) AS "_twm_max2"	,AVG(CAST("SALES_TRAN_ID" AS FLOAT)) AS "_twm_mean2"	,STDDEV_SAMP(CAST("SALES_TRAN_ID" AS FLOAT)) AS "_twm_std2"	,SKEW(CAST("SALES_TRAN_ID" AS FLOAT)) AS "_twm_skew2"	,
+CASE	WHEN AVG(CAST("SALES_TRAN_ID" AS FLOAT)) = 0 THEN NULL 
+ELSE	100* STDDEV_SAMP(CAST("SALES_TRAN_ID" AS FLOAT)) / AVG(CAST("SALES_TRAN_ID" AS FLOAT)) 
+END	AS "_twm_cv2"	,STDDEV_SAMP(CAST("SALES_TRAN_ID" AS FLOAT))**2 AS "_twm_var2"	,SUM(CAST("SALES_TRAN_ID" AS FLOAT)) AS "_twm_sum2"	,SUM(CAST("SALES_TRAN_ID" AS FLOAT)**2) - CAST(COUNT("SALES_TRAN_ID") AS FLOAT)*AVG(CAST("SALES_TRAN_ID" AS FLOAT))**2 AS "_twm_css2"	,CAST(COUNT("Item_Qty") AS FLOAT) AS "_twm_cnt3"	,MIN(CAST("Item_Qty" AS FLOAT)) AS "_twm_min3"	,MAX(CAST("Item_Qty" AS FLOAT)) AS "_twm_max3"	,AVG(CAST("Item_Qty" AS FLOAT)) AS "_twm_mean3"	,STDDEV_SAMP(CAST("Item_Qty" AS FLOAT)) AS "_twm_std3"	,SKEW(CAST("Item_Qty" AS FLOAT)) AS "_twm_skew3"	,
+CASE	WHEN AVG(CAST("Item_Qty" AS FLOAT)) = 0 THEN NULL 
+ELSE	100* STDDEV_SAMP(CAST("Item_Qty" AS FLOAT)) / AVG(CAST("Item_Qty" AS FLOAT)) 
+END	AS "_twm_cv3"	,STDDEV_SAMP(CAST("Item_Qty" AS FLOAT))**2 AS "_twm_var3"	,SUM(CAST("Item_Qty" AS FLOAT)) AS "_twm_sum3"	,SUM(CAST("Item_Qty" AS FLOAT)**2) - CAST(COUNT("Item_Qty") AS FLOAT)*AVG(CAST("Item_Qty" AS FLOAT))**2 AS "_twm_css3"
+FROM	"universal_schema"."sales_transaction_line"
