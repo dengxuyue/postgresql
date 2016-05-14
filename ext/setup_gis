@@ -1,0 +1,21 @@
+#!/bin/bash
+
+TOPDIR=$(cd ..; pwd)
+
+#(1) set up env
+if [ -f "$TOPDIR/pg_macro" ]; then
+source $TOPDIR/pg_macro
+fi
+
+#(2) set up extensions
+psql -d pagila -c "CREATE EXTENSION postgis;" || exit 1
+psql -d pagila -c "CREATE EXTENSION address_standardizer;";
+psql -d pagila -c "CREATE EXTENSION address_standardizer_data_us;";
+psql -d pagila -c "CREATE EXTENSION postgis_topology;";
+
+
+#needed for postgis_tiger_geocoder
+# psql -d pagila -c "CREATE EXTENSION fuzzystrmatch;" || exit 1;
+# psql -d pagila -c "CREATE EXTENSION postgis_tiger_geocoder;";
+
+# psql -d pagila -c "CREATE EXTENSION postgis_sfcgal;";
