@@ -1,0 +1,32 @@
+SELECT 
+    I.ITEM_NAME,
+    N1.REV,
+    N1.COST,
+    N1.MARGIN,
+    N1.PER_MARGIN,
+    RANK() OVER ( ORDER BY PER_MARGIN DESC) AS MARGIN_RANK
+FROM 
+(
+    SELECT 
+        STL.ITEM_ID,
+        SUM(STL.UNIT_SELLING_PRICE_AMT) REV,
+        SUM(STL.UNIT_COST_AMT) as COST,
+        CAST(SUM(STL.UNIT_SELLING_PRICE_AMT) - SUM(STL.UNIT_COST_AMT) AS DEC(18,2)) AS MARGIN,
+        (SUM(STL.UNIT_SELLING_PRICE_AMT) - SUM(STL.UNIT_COST_AMT))/SUM(STL.UNIT_SELLING_PRICE_AMT) * 100 AS PER_MARGIN
+    FROM 
+        universal_schema.SALES_TRANSACTION_LINE STL
+    WHERE 
+        ITEM_ID IN
+        (
+            SELECT ITEM_ID 
+            FROM 
+            universal_schema.ITEM 
+            WHERE ITEM_NAME LIKE 'Good'
+        ) 
+        AND 
+        STL.TRAN_LINE_DATE > '2005-06-26'
+    GROUP BY 1
+) N1(ITEM_ID, REV, COST,MARGIN,PER_MARGIN),
+universal_schema.ITEM I
+WHERE 
+    N1.ITEM_ID=I.ITEM_ID

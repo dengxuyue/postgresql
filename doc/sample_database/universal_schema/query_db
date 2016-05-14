@@ -1,0 +1,11 @@
+#!/bin/bash
+
+stmt_list=$(cat stmt.lst | tr '\n*' ' ')
+
+for st in $stmt_list; do
+cat $st
+echo "#### waiting ....."
+psql -d universal_schema -f $st
+echo "==============================================================================="
+done
+
