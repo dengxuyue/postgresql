@@ -1,0 +1,79 @@
+#!/bin/bash
+
+PGHOME=$HOME/local/pgsql94/latest
+PG_SRC=`pwd`
+
+#(0) clean
+if [ "$1" = "-a" ]; then
+test -f $PGHOME/data/postmaster.pid && $PGHOME/bin/pg_ctl stop
+test -f Makefile && make clean
+rm -rf $PGHOME/../latest/*
+rm -f  $HOME/bin/pg_start_r9 
+rm -f  pg_macro pg_start_r9
+
+echo export PATH=$PGHOME/bin:\$PATH > pg_macro
+echo export PGHOME=$PGHOME         >> pg_macro
+echo export PGPORT=5455            >> pg_macro
+echo export PGDATA=$PGHOME/data    >> pg_macro
+
+fi
+
+export PGHOME=$PGHOME
+export PGPORT=5455
+export PGDATA=$PGHOME/data
+
+#(1) configure
+./configure --prefix=$PGHOME \
+            --with-perl --with-python \
+            --with-pgport=5455 --enable-thread-safety
+
+if [ ! -z $1 ] && [ "$1" = "-c" ]; then
+echo ""
+echo "Configure option:"
+echo "    --with-perl "
+echo "    --with-python"
+echo "    --with-pgport=5455"
+echo "    --enable-thread-safety"
+echo ""
+exit 0
+fi
+
+m4 -DPGHOME=$PGHOME pg_start.sh > pg_start.r9
+awk '/insert pg_macro/{system("cat pg_macro")} 
+                      {print $0}' pg_start.r9 > pg_start_r9
+rm -f pg_start.r9
+test -x pg_start_r9 || chmod a+x pg_start_r9
+
+#(2) install
+make
+make install
+if [ ! -z $1 ] && [ "$1" = "-a" ]; then
+
+if [ -d $HOME/bin ]; then
+cp -f pg_start_r9 $HOME/bin
+fi
+
+cd $PGHOME
+bin/initdb
+bin/postgres > /tmp/pg.log 2>&1 &
+
+ret=1
+cnt=1
+while [ $ret == 1 ] && [ $cnt -lt 60 ]; do
+    cat /tmp/pg.log | grep 'ready to accept connections' > /dev/null 2>&1
+    ret=$?
+    sleep 5
+    cnt=$((cnt+1))
+done
+
+if [ $ret == 1 ]; then
+echo "Please check why database system is NOT ready."
+else 
+
+cd $PG_SRC 
+$PG_SRC/doc/sample_database/pagila/install_db
+$PG_SRC/doc/sample_database/universal_schema/install_db
+
+fi
+
+fi

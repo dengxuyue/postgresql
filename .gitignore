@@ -30,6 +30,8 @@ lib*.pc
 /GNUmakefile
 /config.log
 /config.status
+/pg_macro
+/pg_start_r9
 /pgsql.sln
 /pgsql.sln.cache
 /Debug/

@@ -1,0 +1,37 @@
+PG_SRC=`pwd`
+source $PG_SRC/pg_macro
+
+echo ""
+echo "#### `date` Reinstall ..."
+echo ""
+test -f $PGHOME/data/postmaster.pid && pg_ctl stop
+rm -fr $PGHOME/../latest/data
+rm -fr $PGHOME/../latest/archive/*
+make install
+
+echo ""
+echo "#### `date` Reinit ..."
+echo ""
+cd $PGHOME/
+bin/initdb
+bin/postgres -i > /tmp/pg.log 2>&1 &
+sleep 5
+test -f $PGHOME/data/postmaster.pid && pg_ctl stop
+sleep 5
+
+echo ""
+echo "#### `date` Backup ..."
+echo ""
+psql -h 153.65.177.128 -d postgres -c "select pg_start_backup('2012-04-15')";
+rsync -a --progress --exclude pg_xlog --exclude postgresql.conf --exclude pg_hba.conf \
+	rsync://153.65.177.128/data/  $PGHOME/data
+psql -h 153.65.177.128 -d postgres -c "select pg_stop_backup()";
+
+echo ""
+echo "#### `date` Reconf ..."
+echo ""
+echo "standby_mode    = 'on'"                       >> $PGHOME/data/recovery.conf
+echo "restore_command = 'cp $PGHOME/archive/%f %p'" >> $PGHOME/data/recovery.conf
+echo "trigger_file    = '$PGHOME/data/trigger'"     >> $PGHOME/data/recovery.conf
+
+bin/postgres -i >> /tmp/pg.log 2>&1 &

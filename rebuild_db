@@ -1,0 +1,36 @@
+PG_SRC=`pwd`
+source $PG_SRC/pg_macro
+
+test -f $PGHOME/data/postmaster.pid && pg_ctl stop 
+
+ps aux | grep -v 'grep' | grep 'postgres' > /dev/null
+if [ $? = 0 ]; then
+echo "The postgres master cannot stop."
+exit 1
+fi
+
+rm -fr $PGHOME/../latest/data
+make install
+
+cd $PGHOME
+bin/initdb
+bin/postgres -i > /tmp/pg.log 2>&1 &
+
+ret=1
+cnt=1
+while [ $ret == 1 ] && [ $cnt -lt 60 ]; do
+    cat /tmp/pg.log | grep 'ready to accept connections' > /dev/null 2>&1
+    ret=$?
+    sleep 5
+    cnt=$((cnt+1))
+done
+
+if [ $ret == 1 ]; then
+echo "Please check why database system is NOT ready."
+else
+cd $PG_SRC/
+$PG_SRC/doc/sample_database/pagila/install_db
+$PG_SRC/doc/sample_database/universal_schema/install_db
+
+echo "Install databases pagila and universal_schema"
+fi

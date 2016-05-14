@@ -1,0 +1,38 @@
+PG_SRC=`pwd`
+source $PG_SRC/pg_macro
+
+echo ""
+echo "#### `date` Reinstall ..."
+echo ""
+test -f $PGHOME/data/postmaster.pid && pg_ctl stop
+rm -fr $PGHOME/../latest/data
+make install
+
+cd $PGHOME/
+
+echo ""
+echo "#### `date` Reinit ..."
+echo ""
+bin/initdb
+bin/postgres -i > /tmp/pg.log 2>&1 &
+sleep 5
+test -f $PGHOME/data/postmaster.pid && pg_ctl stop
+sleep 5
+
+echo ""
+echo "#### `date` Reconf ..."
+echo ""
+rm -fr /tmp/xlog/*
+echo "max_wal_senders  = 4"                                    >> $PGHOME/data/postgresql.conf
+echo "wal_level        = hot_standby"                          >> $PGHOME/data/postgresql.conf
+echo "archive_mode     = on"                                   >> $PGHOME/data/postgresql.conf
+echo "listen_addresses = '*'"                                  >> $PGHOME/data/postgresql.conf
+echo "archive_command  = 'cp -i %p /tmp/xlog/%f </dev/null'"   >> $PGHOME/data/postgresql.conf
+
+echo "######################################################"  >> $PGHOME/data/pg_hba.conf
+echo "host    replication    all    153.65.177.1/23    trust"  >> $PGHOME/data/pg_hba.conf
+echo "host    all            all    153.65.177.1/23    trust"  >> $PGHOME/data/pg_hba.conf
+
+bin/postgres -i > /tmp/pg.log 2>&1 &
+sleep 5
+
