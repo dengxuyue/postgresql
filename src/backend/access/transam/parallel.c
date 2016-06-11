@@ -17,6 +17,7 @@
 #include "access/xact.h"
 #include "access/xlog.h"
 #include "access/parallel.h"
+#include "catalog/namespace.h"
 #include "commands/async.h"
 #include "libpq/libpq.h"
 #include "libpq/pqformat.h"
@@ -67,6 +68,8 @@ typedef struct FixedParallelState
 	Oid			database_id;
 	Oid			authenticated_user_id;
 	Oid			current_user_id;
+	Oid			temp_namespace_id;
+	Oid			temp_toast_namespace_id;
 	int			sec_context;
 	PGPROC	   *parallel_master_pgproc;
 	pid_t		parallel_master_pid;
@@ -134,9 +137,9 @@ CreateParallelContext(parallel_worker_main_type entrypoint, int nworkers)
 		nworkers = 0;
 
 	/*
-	 * If we are running under serializable isolation, we can't use
-	 * parallel workers, at least not until somebody enhances that mechanism
-	 * to be parallel-aware.
+	 * If we are running under serializable isolation, we can't use parallel
+	 * workers, at least not until somebody enhances that mechanism to be
+	 * parallel-aware.
 	 */
 	if (IsolationIsSerializable())
 		nworkers = 0;
@@ -288,6 +291,8 @@ InitializeParallelDSM(ParallelContext *pcxt)
 	fps->database_id = MyDatabaseId;
 	fps->authenticated_user_id = GetAuthenticatedUserId();
 	GetUserIdAndSecContext(&fps->current_user_id, &fps->sec_context);
+	GetTempNamespaceState(&fps->temp_namespace_id,
+						  &fps->temp_toast_namespace_id);
 	fps->parallel_master_pgproc = MyProc;
 	fps->parallel_master_pid = MyProcPid;
 	fps->parallel_master_backend_id = MyBackendId;
@@ -646,9 +651,9 @@ DestroyParallelContext(ParallelContext *pcxt)
 	}
 
 	/*
-	 * We can't finish transaction commit or abort until all of the
-	 * workers have exited.  This means, in particular, that we can't respond
-	 * to interrupts at this stage.
+	 * We can't finish transaction commit or abort until all of the workers
+	 * have exited.  This means, in particular, that we can't respond to
+	 * interrupts at this stage.
 	 */
 	HOLD_INTERRUPTS();
 	WaitForParallelWorkersToExit(pcxt);
@@ -918,7 +923,7 @@ ParallelWorkerMain(Datum main_arg)
 	if (toc == NULL)
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
-			   errmsg("invalid magic number in dynamic shared memory segment")));
+		   errmsg("invalid magic number in dynamic shared memory segment")));
 
 	/* Look up fixed parallel state. */
 	fps = shm_toc_lookup(toc, PARALLEL_KEY_FIXED);
@@ -958,9 +963,9 @@ ParallelWorkerMain(Datum main_arg)
 	 */
 
 	/*
-	 * Join locking group.  We must do this before anything that could try
-	 * to acquire a heavyweight lock, because any heavyweight locks acquired
-	 * to this point could block either directly against the parallel group
+	 * Join locking group.  We must do this before anything that could try to
+	 * acquire a heavyweight lock, because any heavyweight locks acquired to
+	 * this point could block either directly against the parallel group
 	 * leader or against some process which in turn waits for a lock that
 	 * conflicts with the parallel group leader, causing an undetected
 	 * deadlock.  (If we can't join the lock group, the leader has gone away,
@@ -1018,6 +1023,13 @@ ParallelWorkerMain(Datum main_arg)
 
 	/* Restore user ID and security context. */
 	SetUserIdAndSecContext(fps->current_user_id, fps->sec_context);
+
+	/* Restore temp-namespace state to ensure search path matches leader's. */
+	SetTempNamespaceState(fps->temp_namespace_id,
+						  fps->temp_toast_namespace_id);
+
+	/* Set ParallelMasterBackendId so we know how to address temp relations. */
+	ParallelMasterBackendId = fps->parallel_master_backend_id;
 
 	/*
 	 * We've initialized all of our state now; nothing should change

@@ -317,6 +317,26 @@ my %tests = (
 			section_post_data => 1,
 		},
 	},
+	'CREATE ACCESS METHOD regress_test_am' => {
+		regexp => qr/^
+			\QCREATE ACCESS METHOD regress_test_am TYPE INDEX HANDLER bthandler;\E
+			$/xm,
+		like => {
+			binary_upgrade => 1,
+		},
+		unlike => {
+			clean => 1,
+			clean_if_exists => 1,
+			createdb => 1,
+			defaults => 1,
+			no_privs => 1,
+			no_owner => 1,
+			pg_dumpall_globals => 1,
+			schema_only => 1,
+			section_pre_data => 1,
+			section_post_data => 1,
+		},
+	},
 	'COMMENT ON EXTENSION test_pg_dump' => {
 		regexp => qr/^
 			\QCOMMENT ON EXTENSION test_pg_dump \E
@@ -340,9 +360,9 @@ my %tests = (
 	},
 	'GRANT SELECT ON TABLE regress_pg_dump_table' => {
 		regexp => qr/^
-			\QSELECT binary_upgrade_set_record_init_privs(true);\E\n
+			\QSELECT pg_catalog.binary_upgrade_set_record_init_privs(true);\E\n
 			\QGRANT SELECT ON TABLE regress_pg_dump_table TO dump_test;\E\n
-			\QSELECT binary_upgrade_set_record_init_privs(false);\E
+			\QSELECT pg_catalog.binary_upgrade_set_record_init_privs(false);\E
 			$/xms,
 		like => {
 			binary_upgrade => 1,
@@ -362,9 +382,9 @@ my %tests = (
 	},
 	'GRANT SELECT(col1) ON regress_pg_dump_table' => {
 		regexp => qr/^
-			\QSELECT binary_upgrade_set_record_init_privs(true);\E\n
+			\QSELECT pg_catalog.binary_upgrade_set_record_init_privs(true);\E\n
 			\QGRANT SELECT(col1) ON TABLE regress_pg_dump_table TO PUBLIC;\E\n
-			\QSELECT binary_upgrade_set_record_init_privs(false);\E
+			\QSELECT pg_catalog.binary_upgrade_set_record_init_privs(false);\E
 			$/xms,
 		like => {
 			binary_upgrade => 1,

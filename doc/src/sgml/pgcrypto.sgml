@@ -866,7 +866,7 @@ Applies to: pgp_sym_encrypt
     be a value between 1024 and 65011712, inclusive.
    </para>
 <literallayout>
-Default: A random value bewteen 65536 and 253952
+Default: A random value between 65536 and 253952
 Applies to: pgp_sym_encrypt, only with s2k-mode=3
 </literallayout>
   </sect4>
@@ -1357,7 +1357,7 @@ gen_random_uuid() returns uuid
      <para>Jean-Luc Cooke Fortuna-based <filename>/dev/random</> driver for Linux.</para>
     </listitem>
     <listitem>
-     <para><ulink url="http://research.cyber.ee/~lipmaa/crypto/"></ulink></para>
+     <para><ulink url="http://kodu.ut.ee/~lipmaa/crypto/"></ulink></para>
      <para>Collection of cryptology pointers.</para>
     </listitem>
    </itemizedlist>

@@ -153,7 +153,7 @@
        <para>
         Use of parallel query execution can be controlled through the new
         configuration parameters
-        <xref linkend="guc-max-parallel-degree">,
+        <xref linkend="guc-max-parallel-workers-per-gather">,
         <xref linkend="guc-force-parallel-mode">,
         <xref linkend="guc-parallel-setup-cost">, and
         <xref linkend="guc-parallel-tuple-cost">.
@@ -3165,7 +3165,7 @@ This commit is also listed under libpq and PL/pgSQL
         Extend <filename>contrib/unaccent</>'s
         standard <filename>unaccent.rules</> file to handle all diacritics
         known to Unicode, and expand ligatures correctly
-        (Thomas Munro, Leonard Benedetti)
+        (Thomas Munro, L&eacute;onard Benedetti)
        </para>
 
        <para>

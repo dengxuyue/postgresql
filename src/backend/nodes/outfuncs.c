@@ -1609,7 +1609,7 @@ _outPathInfo(StringInfo str, const Path *node)
 		_outBitmapset(str, NULL);
 	WRITE_BOOL_FIELD(parallel_aware);
 	WRITE_BOOL_FIELD(parallel_safe);
-	WRITE_INT_FIELD(parallel_degree);
+	WRITE_INT_FIELD(parallel_workers);
 	WRITE_FLOAT_FIELD(rows, "%.0f");
 	WRITE_FLOAT_FIELD(startup_cost, "%.2f");
 	WRITE_FLOAT_FIELD(total_cost, "%.2f");
@@ -2135,16 +2135,6 @@ _outIndexOptInfo(StringInfo str, const IndexOptInfo *node)
 	WRITE_BOOL_FIELD(immediate);
 	WRITE_BOOL_FIELD(hypothetical);
 	/* we don't bother with fields copied from the index AM's API struct */
-}
-
-static void
-_outForeignKeyOptInfo(StringInfo str, const ForeignKeyOptInfo *node)
-{
-	WRITE_NODE_TYPE("FOREIGNKEYOPTINFO");
-
-	WRITE_OID_FIELD(conrelid);
-	WRITE_OID_FIELD(confrelid);
-	WRITE_INT_FIELD(nkeys);
 }
 
 static void
@@ -3616,9 +3606,6 @@ outNode(StringInfo str, const void *obj)
 				break;
 			case T_IndexOptInfo:
 				_outIndexOptInfo(str, obj);
-				break;
-			case T_ForeignKeyOptInfo:
-				_outForeignKeyOptInfo(str, obj);
 				break;
 			case T_EquivalenceClass:
 				_outEquivalenceClass(str, obj);

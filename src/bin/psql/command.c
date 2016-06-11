@@ -402,6 +402,9 @@ exec_command(const char *cmd,
 					/* standard listing of interesting things */
 					success = listTables("tvmsE", NULL, show_verbose, show_system);
 				break;
+			case 'A':
+				success = describeAccessMethods(pattern, show_verbose);
+				break;
 			case 'a':
 				success = describeAggregates(pattern, show_verbose, show_system);
 				break;
@@ -854,7 +857,7 @@ exec_command(const char *cmd,
 				puts(_("out of memory"));
 		}
 		else
-			puts(_("There was no previous error."));
+			puts(_("There is no previous error."));
 	}
 
 	/* \f -- change field separator */
@@ -3363,7 +3366,7 @@ get_create_object_cmd(EditableObjectType obj_type, Oid oid,
 							appendPQExpBufferStr(buf, "CREATE OR REPLACE VIEW ");
 							break;
 						default:
-							psql_error("%s.%s is not a view\n",
+							psql_error("\"%s.%s\" is not a view\n",
 									   nspname, relname);
 							result = false;
 							break;
@@ -3379,7 +3382,7 @@ get_create_object_cmd(EditableObjectType obj_type, Oid oid,
 												   pset.encoding,
 												   standard_strings()))
 						{
-							psql_error("Could not parse reloptions array\n");
+							psql_error("could not parse reloptions array\n");
 							result = false;
 						}
 						appendPQExpBufferStr(buf, ")");
